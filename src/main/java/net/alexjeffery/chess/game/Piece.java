@@ -1,29 +1,80 @@
 package net.alexjeffery.chess.game;
 
-public enum Piece {
-    NONE,
-    PAWN_W,
-    PAWN_B,
-    ROOK_W,
-    ROOK_B,
-    KNIGHT_W,
-    KNIGHT_B,
-    BISHOP_W,
-    BISHOP_B,
-    QUEEN_W,
-    QUEEN_B,
-    KING_W,
-    KING_B;
+/**
+ * We represent a piece with a byte. This class contains static methods for manipulating them.
+ *
+ * The type of piece is represented by the decimal unit (1 through 7), and the colour is represented by the ten
+ * (10 and 20). Whether or not the piece has moved is represented by the hundred (100 for moved, 0 for unmoved).
+ */
+public class Piece {
+    public static final byte NONE = 0;
 
-    public boolean isWhite() {
-        return this.toString().endsWith("W");
+    public static final byte PAWN = 1;
+    public static final byte ROOK = 2;
+    public static final byte KNIGHT = 3;
+    public static final byte BISHOP = 4;
+    public static final byte QUEEN = 5;
+    public static final byte KING = 7;
+
+    public static final byte WHITE = 10;
+    public static final byte BLACK = 20;
+
+    public static final byte UNMOVED = 000;
+    public static final byte MOVED = 100;
+
+    public static boolean isType(byte piece, byte type) {
+        return getType(piece) == type;
     }
 
-    public boolean isBlack() {
-        return this.toString().endsWith("B");
+    public static byte getType(byte piece) {
+        return (byte) (piece % WHITE);
     }
 
-    public boolean isPiece() {
-        return this != NONE;
+    public static boolean isWhite(byte piece) {
+        return (piece % MOVED) < BLACK;
+    }
+
+    public static boolean isBlack(byte piece) {
+        return (piece % MOVED) >= BLACK;
+    }
+
+    public static boolean isMoved(byte piece) {
+        return piece >= MOVED;
+    }
+
+    public static byte setMoved(byte piece) {
+        return (byte) ((piece % MOVED) + MOVED);
+    }
+
+    public char fenChar(byte piece) {
+        char whitePiece = fenCharForType(getType(piece));
+        if (isBlack(piece))
+            return ("" + whitePiece).toLowerCase().charAt(0);
+        return whitePiece;
+    }
+
+    public char fenCharForType(byte type) {
+        if (type == PAWN) return 'P';
+        if (type == ROOK) return 'R';
+        if (type == KNIGHT) return 'N';
+        if (type == BISHOP) return 'B';
+        if (type == QUEEN) return 'Q';
+        if (type == KING) return 'K';
+        throw new IllegalArgumentException();
+    }
+
+    public byte fromFenChar(char fenChar, boolean moved) {
+        boolean white = Character.isUpperCase(fenChar);
+        final byte type;
+        switch (("" + fenChar).toUpperCase().charAt(0)) {
+            case 'P': type = PAWN; break;
+            case 'R': type = ROOK; break;
+            case 'N': type = KNIGHT; break;
+            case 'B': type = BISHOP; break;
+            case 'Q': type = QUEEN; break;
+            case 'K': type = KING; break;
+            default: return NONE;
+        }
+        return (byte) ((moved ? MOVED : UNMOVED) + (white ? WHITE : BLACK) + type);
     }
 }
