@@ -19,9 +19,6 @@ public class Piece {
     public static final byte WHITE = 10;
     public static final byte BLACK = 20;
 
-    public static final byte UNMOVED = 000;
-    public static final byte MOVED = 100;
-
     public static boolean isType(byte piece, byte type) {
         return getType(piece) == type;
     }
@@ -31,19 +28,11 @@ public class Piece {
     }
 
     public static boolean isWhite(byte piece) {
-        return (piece % MOVED) < BLACK;
+        return piece < BLACK;
     }
 
     public static boolean isBlack(byte piece) {
-        return (piece % MOVED) >= BLACK;
-    }
-
-    public static boolean isMoved(byte piece) {
-        return piece >= MOVED;
-    }
-
-    public static byte setMoved(byte piece) {
-        return (byte) ((piece % MOVED) + MOVED);
+        return piece >= BLACK;
     }
 
     public char fenChar(byte piece) {
@@ -53,7 +42,7 @@ public class Piece {
         return whitePiece;
     }
 
-    public char fenCharForType(byte type) {
+    public static char fenCharForType(byte type) {
         if (type == PAWN) return 'P';
         if (type == ROOK) return 'R';
         if (type == KNIGHT) return 'N';
@@ -63,7 +52,7 @@ public class Piece {
         throw new IllegalArgumentException();
     }
 
-    public byte fromFenChar(char fenChar, boolean moved) {
+    public static byte fromFenChar(char fenChar) {
         boolean white = Character.isUpperCase(fenChar);
         final byte type;
         switch (("" + fenChar).toUpperCase().charAt(0)) {
@@ -75,6 +64,6 @@ public class Piece {
             case 'K': type = KING; break;
             default: return NONE;
         }
-        return (byte) ((moved ? MOVED : UNMOVED) + (white ? WHITE : BLACK) + type);
+        return (byte) ((white ? WHITE : BLACK) + type);
     }
 }
