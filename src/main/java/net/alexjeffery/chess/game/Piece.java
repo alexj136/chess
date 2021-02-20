@@ -35,21 +35,19 @@ public class Piece {
         return piece >= BLACK;
     }
 
-    public char fenChar(byte piece) {
+    public static char fenChar(byte piece) {
         char whitePiece = fenCharForType(getType(piece));
-        if (isBlack(piece))
-            return ("" + whitePiece).toLowerCase().charAt(0);
-        return whitePiece;
+        return isBlack(piece) ? Character.toLowerCase(whitePiece) : whitePiece;
     }
 
-    public static char fenCharForType(byte type) {
+    private static char fenCharForType(byte type) {
         if (type == PAWN) return 'P';
         if (type == ROOK) return 'R';
         if (type == KNIGHT) return 'N';
         if (type == BISHOP) return 'B';
         if (type == QUEEN) return 'Q';
         if (type == KING) return 'K';
-        throw new IllegalArgumentException();
+        throw new IllegalArgumentException("" + type);
     }
 
     public static byte fromFenChar(char fenChar) {
