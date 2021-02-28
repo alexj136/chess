@@ -140,7 +140,7 @@ public class Board {
             if (rankCharLower >= 'a' && rankCharLower <= 'h') {
                 fenCharPtr++;
                 if(fenCharPtr < fenString.length()) {
-                    char fileChar = fenString.charAt(fenCharPtr + 1); // check bounds
+                    char fileChar = fenString.charAt(fenCharPtr);
                     if (fileChar >= '1' && fileChar <= '8') {
                         this.enPassant = (rankCharLower - 'a') * NUM_RANKS + (fileChar - '1');
                         fenCharPtr++;
